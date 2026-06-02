@@ -9,6 +9,7 @@
     "lint": "next lint",
     "test": "jest --runInBand",
     "test:watch": "jest --watch"
+    "build": "[my-framework] build --output public"
   },
   "dependencies": {
     "axios": "^1.6.8",
