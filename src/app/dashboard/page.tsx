@@ -52,7 +52,19 @@ export default function DashboardPage() {
     reports
       .dashboard()
       .then((r) => setData(r.data))
-      .catch(() => setError('Failed to load dashboard data.'))
+      .catch((err) => {
+        const status = err?.response?.status;
+        const msg = err?.response?.data?.error || err?.message || 'Unknown error';
+        if (status === 401) {
+          setError('Not authenticated. Please log in again.');
+        } else if (status === 403) {
+          setError('You do not have permission to view the dashboard.');
+        } else if (!err?.response) {
+          setError(`Cannot reach the backend (${API_BASE}). Check NEXT_PUBLIC_API_URL.`);
+        } else {
+          setError(`Failed to load dashboard data. [${status}] ${msg}`);
+        }
+      })
       .finally(() => setLoading(false));
   }, []);
 
