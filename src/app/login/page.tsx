@@ -39,8 +39,16 @@ export default function LoginPage() {
     try {
       await login(email.trim(), password);
       router.push('/dashboard');
-    } catch {
-      setError('Invalid credentials. Please try again.');
+    } catch (err: unknown) {
+      const axiosErr = err as { response?: { status?: number; data?: { error?: string } }; message?: string };
+      if (!axiosErr?.response) {
+        const apiBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        setError(`Cannot reach backend at ${apiBase}. Check your deployment settings.`);
+      } else if (axiosErr.response?.status === 401) {
+        setError('Invalid credentials. Please try again.');
+      } else {
+        setError(`Login failed: [${axiosErr.response?.status}] ${axiosErr.response?.data?.error || axiosErr.message}`);
+      }
     } finally {
       setLoading(false);
     }
