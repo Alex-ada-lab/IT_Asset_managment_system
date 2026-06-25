@@ -11,6 +11,10 @@ FROM node:20-alpine AS builder
 
 WORKDIR /app
 
+# Accept the API URL at build time (NEXT_PUBLIC_* vars must be baked in during build)
+ARG NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_API_URL=${NEXT_PUBLIC_API_URL}
+
 # Copy installed dependencies
 COPY --from=deps /app/node_modules ./node_modules
 
