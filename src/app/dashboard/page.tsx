@@ -60,7 +60,8 @@ export default function DashboardPage() {
         } else if (status === 403) {
           setError('You do not have permission to view the dashboard.');
         } else if (!err?.response) {
-          setError(`Cannot reach the backend (${API_BASE}). Check NEXT_PUBLIC_API_URL.`);
+          const apiBase = process.env.NEXT_PUBLIC_API_URL || process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:3001';
+          setError(`Cannot reach the backend (${apiBase}). Check NEXT_PUBLIC_API_URL.`);
         } else {
           setError(`Failed to load dashboard data. [${status}] ${msg}`);
         }
